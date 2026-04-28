@@ -41,7 +41,7 @@
         <PackageReference Include="GeWuYou.GFramework.Core.SourceGenerators" Version="0.1.0"/>
         <PackageReference Include="GeWuYou.GFramework.Cqrs" Version="0.1.0"/>
         <PackageReference Include="GeWuYou.GFramework.Cqrs.Abstractions" Version="0.1.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Cqrs.SourceGenerators" Version="0.1.0"/>
+        <PackageReference Include="GeWuYou.GFramework.Cqrs.SourceGenerators" Version="0.1.2"/>
         <PackageReference Include="GeWuYou.GFramework.Game.SourceGenerators" Version="0.1.0"/>
         <PackageReference Include="GeWuYou.GFramework.Godot" Version="0.1.0"/>
         <PackageReference Include="GeWuYou.GFramework.Godot.SourceGenerators" Version="0.1.0"/>
