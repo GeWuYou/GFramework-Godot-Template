@@ -52,6 +52,7 @@ jobs:
           test ! -e "rename_project.sh"
           test ! -e "rename_project.ps1"
           test ! -e "rename_project.config"
+          test ! -e ".github/workflows/validate-rename-project.yml"
           if grep -R -n -E 'GFramework-Godot-Template|GFrameworkGodotTemplate|GFramework_Godot_Template\.Tests' . \
             --exclude-dir=.godot \
             --exclude-dir=.git \
@@ -128,7 +129,8 @@ jobs:
               "tests/GFramework-Godot-Template.Tests",
               "rename_project.sh",
               "rename_project.ps1",
-              "rename_project.config"
+              "rename_project.config",
+              ".github/workflows/validate-rename-project.yml"
           )
           foreach ($forbiddenPath in $forbiddenPaths) {
               if (Test-Path -LiteralPath $forbiddenPath) {

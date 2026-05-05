@@ -4,6 +4,7 @@ set -e
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 CONFIG_FILE="$SCRIPT_DIR/rename_project.config"
+cd "$SCRIPT_DIR"
 OLD_PROJECT_NAME=""
 OLD_NAMESPACE=""
 OLD_TEST_NAMESPACE=""

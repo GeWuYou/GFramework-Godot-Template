@@ -37,6 +37,9 @@ if ([string]::IsNullOrWhiteSpace($scriptRoot)) {
 
 $configPath = Join-Path $scriptRoot "rename_project.config"
 
+Push-Location -LiteralPath $scriptRoot
+try {
+
 function Read-RenameProjectConfig {
     param([string]$path)
 
@@ -293,4 +296,7 @@ if (-not $WhatIf) {
     Write-Host "1. 在 Rider 中重新打开解决方案" -ForegroundColor White
     Write-Host "2. 运行清理命令: dotnet clean" -ForegroundColor White
     Write-Host "3. 重新构建项目: dotnet build" -ForegroundColor White
+}
+} finally {
+    Pop-Location
 }
