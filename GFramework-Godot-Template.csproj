@@ -39,7 +39,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="GeWuYou.GFramework" Version="0.3.1" />
-        <PackageReference Include="GeWuYou.GFramework.Core.SourceGenerators" Version="0.3.1" />
+        <PackageReference Include="GeWuYou.GFramework.Core.SourceGenerators" Version="0.6.0" />
         <PackageReference Include="GeWuYou.GFramework.Cqrs" Version="0.3.1" />
         <PackageReference Include="GeWuYou.GFramework.Cqrs.Abstractions" Version="0.3.1" />
         <PackageReference Include="GeWuYou.GFramework.Cqrs.SourceGenerators" Version="0.3.1" />
