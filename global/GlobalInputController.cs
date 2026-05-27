@@ -16,6 +16,7 @@ namespace GFrameworkGodotTemplate.global;
 public partial class GlobalInputController : GameInputController
 {
     private UiHandle? _pauseMenuUiHandle;
+    private bool _isOpeningPauseMenu;
 
     /// <summary>
     ///     状态机系统实例，用于管理游戏状态。
@@ -52,6 +53,13 @@ public partial class GlobalInputController : GameInputController
         if (Tree.Paused || _stateMachineSystem.Current is not PlayingState)
             return;
 
+        if (_isOpeningPauseMenu)
+        {
+            GetViewport().SetInputAsHandled();
+            return;
+        }
+
+        _isOpeningPauseMenu = true;
         _log.Debug("暂停游戏");
         OpenPauseMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
         GetViewport().SetInputAsHandled();
@@ -77,10 +85,17 @@ public partial class GlobalInputController : GameInputController
 
     private async Task OpenPauseMenuAsync()
     {
-        _pauseMenuUiHandle = await this.SendAsync(
-            new PauseGameWithOpenPauseMenuCommand(new OpenPauseMenuCommandInput
-            {
-                Handle = _pauseMenuUiHandle
-            })).ConfigureAwait(true);
+        try
+        {
+            _pauseMenuUiHandle = await this.SendAsync(
+                new PauseGameWithOpenPauseMenuCommand(new OpenPauseMenuCommandInput
+                {
+                    Handle = _pauseMenuUiHandle
+                })).ConfigureAwait(true);
+        }
+        finally
+        {
+            _isOpeningPauseMenu = false;
+        }
     }
 }

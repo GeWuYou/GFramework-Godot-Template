@@ -14,6 +14,8 @@ namespace GFrameworkGodotTemplate.scripts.pause_menu;
 public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, ISimpleUiPage,
     IUiInteractionProfileProvider, IUiActionHandler
 {
+    private bool _isTransitionInProgress;
+
     [GetUtility] private ITemplateContentCatalog _contentCatalog = null!;
 
     /// <summary>
@@ -70,7 +72,9 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
     {
         if (action != UiInputAction.Cancel || !Visible) return false;
 
-        ResumeGameAndClosePauseMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
+        if (_isTransitionInProgress) return true;
+
+        RunUiTransition(ResumeGameAndClosePauseMenuAsync);
         return true;
     }
 
@@ -128,7 +132,9 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         // 绑定恢复游戏按钮点击事件
         _resumeButton.Pressed += () =>
         {
-            ResumeGameAndClosePauseMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
+            if (_isTransitionInProgress) return;
+
+            RunUiTransition(ResumeGameAndClosePauseMenuAsync);
         };
         // 绑定加载游戏按钮点击事件
         _loadButton.Pressed += () => { _log.Debug("加载游戏"); };
@@ -138,7 +144,9 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         // 绑定返回主菜单按钮点击事件
         _mainMenuButton.Pressed += () =>
         {
-            ReturnToMainMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
+            if (_isTransitionInProgress) return;
+
+            RunUiTransition(ReturnToMainMenuAsync);
         };
 
         // 绑定退出游戏按钮点击事件
@@ -151,11 +159,32 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         await _stateMachineSystem.ChangeToAsync<MainMenuState>().ConfigureAwait(true);
     }
 
+    private void RunUiTransition(Func<Task> transition)
+    {
+        _isTransitionInProgress = true;
+        RunUiTransitionCoreAsync(transition).ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
+    }
+
+    private async Task RunUiTransitionCoreAsync(Func<Task> transition)
+    {
+        try
+        {
+            await transition().ConfigureAwait(true);
+        }
+        finally
+        {
+            _isTransitionInProgress = false;
+        }
+    }
+
     private async Task ResumeGameAndClosePauseMenuAsync()
     {
+        var handle = GetPage().Handle;
+        if (handle is null) return;
+
         await this.SendAsync(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
         {
-            Handle = GetPage().Handle!.Value
+            Handle = handle.Value
         })).ConfigureAwait(true);
     }
 
