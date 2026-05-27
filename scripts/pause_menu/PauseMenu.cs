@@ -70,7 +70,7 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
     {
         if (action != UiInputAction.Cancel || !Visible) return false;
 
-        ResumeGameAndClosePauseMenu();
+        ResumeGameAndClosePauseMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
         return true;
     }
 
@@ -128,10 +128,7 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         // 绑定恢复游戏按钮点击事件
         _resumeButton.Pressed += () =>
         {
-            this.SendCommand(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
-            {
-                Handle = GetPage().Handle!.Value
-            }));
+            ResumeGameAndClosePauseMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
         };
         // 绑定加载游戏按钮点击事件
         _loadButton.Pressed += () => { _log.Debug("加载游戏"); };
@@ -141,31 +138,30 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         // 绑定返回主菜单按钮点击事件
         _mainMenuButton.Pressed += () =>
         {
-            this.SendCommand(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
-            {
-                Handle = GetPage().Handle!.Value
-            }));
-            _stateMachineSystem.ChangeToAsync<MainMenuState>().ToCoroutineEnumerator().RunCoroutine();
+            ReturnToMainMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
         };
 
         // 绑定退出游戏按钮点击事件
         _quitButton.Pressed += () => this.RunCommandCoroutine(new ExitGameCommand());
     }
 
+    private async Task ReturnToMainMenuAsync()
+    {
+        await ResumeGameAndClosePauseMenuAsync().ConfigureAwait(true);
+        await _stateMachineSystem.ChangeToAsync<MainMenuState>().ConfigureAwait(true);
+    }
+
+    private async Task ResumeGameAndClosePauseMenuAsync()
+    {
+        await this.SendAsync(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
+        {
+            Handle = GetPage().Handle!.Value
+        })).ConfigureAwait(true);
+    }
+
     private void ConfigureUnavailableActions()
     {
         _saveButton.Disabled = true;
-    }
-
-    /// <summary>
-    ///     恢复游戏并关闭暂停菜单。
-    /// </summary>
-    private void ResumeGameAndClosePauseMenu()
-    {
-        this.SendCommand(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
-        {
-            Handle = GetPage().Handle!.Value
-        }));
     }
 
     private void ApplyStaticText()

@@ -53,8 +53,7 @@ public partial class GlobalInputController : GameInputController
             return;
 
         _log.Debug("暂停游戏");
-        _pauseMenuUiHandle = this.SendCommand(new PauseGameWithOpenPauseMenuCommand(new OpenPauseMenuCommandInput
-            { Handle = _pauseMenuUiHandle }));
+        OpenPauseMenuAsync().ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
         GetViewport().SetInputAsHandled();
     }
 
@@ -74,5 +73,14 @@ public partial class GlobalInputController : GameInputController
 
     protected override void Handle(InputPhase phase, InputEvent @event)
     {
+    }
+
+    private async Task OpenPauseMenuAsync()
+    {
+        _pauseMenuUiHandle = await this.SendAsync(
+            new PauseGameWithOpenPauseMenuCommand(new OpenPauseMenuCommandInput
+            {
+                Handle = _pauseMenuUiHandle
+            })).ConfigureAwait(true);
     }
 }
