@@ -8,14 +8,11 @@ namespace GFrameworkGodotTemplate.scripts.cqrs.game.command;
 public class
     PauseGameWithOpenPauseMenuCommandHandler : AbstractCommandHandler<PauseGameWithOpenPauseMenuCommand, UiHandle>
 {
-    public override ValueTask<UiHandle> Handle(PauseGameWithOpenPauseMenuCommand command,
+    public override async ValueTask<UiHandle> Handle(PauseGameWithOpenPauseMenuCommand command,
         CancellationToken cancellationToken)
     {
-        // 发送暂停游戏命令
-        this.SendCommand(new PauseGameCommand());
+        await this.SendAsync(new PauseGameCommand(), cancellationToken).ConfigureAwait(true);
 
-        // 发送打开暂停菜单命令并返回结果
-        var handle = this.SendCommand(new OpenPauseMenuCommand(command.Input));
-        return ValueTask.FromResult(handle);
+        return await this.SendAsync(new OpenPauseMenuCommand(command.Input), cancellationToken).ConfigureAwait(true);
     }
 }

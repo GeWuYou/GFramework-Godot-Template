@@ -14,6 +14,8 @@ namespace GFrameworkGodotTemplate.scripts.pause_menu;
 public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, ISimpleUiPage,
     IUiInteractionProfileProvider, IUiActionHandler
 {
+    private bool _isTransitionInProgress;
+
     [GetUtility] private ITemplateContentCatalog _contentCatalog = null!;
 
     /// <summary>
@@ -70,7 +72,9 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
     {
         if (action != UiInputAction.Cancel || !Visible) return false;
 
-        ResumeGameAndClosePauseMenu();
+        if (_isTransitionInProgress) return true;
+
+        RunUiTransition(ResumeGameAndClosePauseMenuAsync);
         return true;
     }
 
@@ -128,10 +132,9 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         // 绑定恢复游戏按钮点击事件
         _resumeButton.Pressed += () =>
         {
-            this.SendCommand(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
-            {
-                Handle = GetPage().Handle!.Value
-            }));
+            if (_isTransitionInProgress) return;
+
+            RunUiTransition(ResumeGameAndClosePauseMenuAsync);
         };
         // 绑定加载游戏按钮点击事件
         _loadButton.Pressed += () => { _log.Debug("加载游戏"); };
@@ -141,31 +144,53 @@ public partial class PauseMenu : Control, IController, IUiPageBehaviorProvider, 
         // 绑定返回主菜单按钮点击事件
         _mainMenuButton.Pressed += () =>
         {
-            this.SendCommand(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
-            {
-                Handle = GetPage().Handle!.Value
-            }));
-            _stateMachineSystem.ChangeToAsync<MainMenuState>().ToCoroutineEnumerator().RunCoroutine();
+            if (_isTransitionInProgress) return;
+
+            RunUiTransition(ReturnToMainMenuAsync);
         };
 
         // 绑定退出游戏按钮点击事件
         _quitButton.Pressed += () => this.RunCommandCoroutine(new ExitGameCommand());
     }
 
+    private async Task ReturnToMainMenuAsync()
+    {
+        await ResumeGameAndClosePauseMenuAsync().ConfigureAwait(true);
+        await _stateMachineSystem.ChangeToAsync<MainMenuState>().ConfigureAwait(true);
+    }
+
+    private void RunUiTransition(Func<Task> transition)
+    {
+        _isTransitionInProgress = true;
+        RunUiTransitionCoreAsync(transition).ToCoroutineEnumerator().RunCoroutine(Segment.ProcessIgnorePause);
+    }
+
+    private async Task RunUiTransitionCoreAsync(Func<Task> transition)
+    {
+        try
+        {
+            await transition().ConfigureAwait(true);
+        }
+        finally
+        {
+            _isTransitionInProgress = false;
+        }
+    }
+
+    private async Task ResumeGameAndClosePauseMenuAsync()
+    {
+        var handle = GetPage().Handle;
+        if (handle is null) return;
+
+        await this.SendAsync(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
+        {
+            Handle = handle.Value
+        })).ConfigureAwait(true);
+    }
+
     private void ConfigureUnavailableActions()
     {
         _saveButton.Disabled = true;
-    }
-
-    /// <summary>
-    ///     恢复游戏并关闭暂停菜单。
-    /// </summary>
-    private void ResumeGameAndClosePauseMenu()
-    {
-        this.SendCommand(new ResumeGameWithClosePauseMenuCommand(new ClosePauseMenuCommandInput
-        {
-            Handle = GetPage().Handle!.Value
-        }));
     }
 
     private void ApplyStaticText()
