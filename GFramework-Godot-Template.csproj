@@ -34,7 +34,7 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup Condition="'$(UseLocalGFrameworkWorkspace)' != 'true'">
-        <PackageReference Include="Meziantou.Analyzer" Version="3.0.98">
+        <PackageReference Include="Meziantou.Analyzer" Version="3.0.104">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
