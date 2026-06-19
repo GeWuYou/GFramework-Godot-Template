@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.6.2">
+<Project Sdk="Godot.NET.Sdk/4.7.0">
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
@@ -38,14 +38,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="GeWuYou.GFramework" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Core.SourceGenerators" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Cqrs" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Cqrs.Abstractions" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Cqrs.SourceGenerators" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Game.SourceGenerators" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Godot" Version="0.7.0"/>
-        <PackageReference Include="GeWuYou.GFramework.Godot.SourceGenerators" Version="0.7.0"/>
+        <PackageReference Include="GeWuYou.GFramework" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Core.SourceGenerators" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Cqrs" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Cqrs.Abstractions" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Cqrs.SourceGenerators" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Game.SourceGenerators" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Godot" Version="0.7.1"/>
+        <PackageReference Include="GeWuYou.GFramework.Godot.SourceGenerators" Version="0.7.1"/>
     </ItemGroup>
     <ItemGroup Condition="'$(UseLocalGFrameworkWorkspace)' == 'true'">
         <ProjectReference Include="..\GFramework\GFramework.Core\GFramework.Core.csproj"/>
@@ -54,27 +54,13 @@
         <ProjectReference Include="..\GFramework\GFramework.Godot\GFramework.Godot.csproj"/>
         <ProjectReference Include="..\GFramework\GFramework.Core.SourceGenerators.Abstractions\GFramework.Core.SourceGenerators.Abstractions.csproj"/>
         <ProjectReference Include="..\GFramework\GFramework.Godot.SourceGenerators.Abstractions\GFramework.Godot.SourceGenerators.Abstractions.csproj"/>
-        <ProjectReference Include="..\GFramework\GFramework.Core.SourceGenerators.Abstractions\GFramework.Core.SourceGenerators.Abstractions.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\GFramework\GFramework.Godot.SourceGenerators.Abstractions\GFramework.Godot.SourceGenerators.Abstractions.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\GFramework\GFramework.SourceGenerators.Common\GFramework.SourceGenerators.Common.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\GFramework\GFramework.Core.SourceGenerators\GFramework.Core.SourceGenerators.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\GFramework\GFramework.Cqrs.SourceGenerators\GFramework.Cqrs.SourceGenerators.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\GFramework\GFramework.Game.SourceGenerators\GFramework.Game.SourceGenerators.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\GFramework\GFramework.Godot.SourceGenerators\GFramework.Godot.SourceGenerators.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.Core.SourceGenerators.Abstractions\GFramework.Core.SourceGenerators.Abstractions.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.Godot.SourceGenerators.Abstractions\GFramework.Godot.SourceGenerators.Abstractions.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.SourceGenerators.Common\GFramework.SourceGenerators.Common.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.Core.SourceGenerators\GFramework.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.Cqrs.SourceGenerators\GFramework.Cqrs.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.Game.SourceGenerators\GFramework.Game.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\GFramework\GFramework.Godot.SourceGenerators\GFramework.Godot.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
     <ItemGroup Condition="'$(UseLocalGFrameworkWorkspace)' == 'true' and '$(EnableGFrameworkGlobalUsings)' == 'true'">
         <Using Include="GFramework.Core.Abstractions.Architectures"/>
@@ -208,10 +194,8 @@
         <Using Include="GFramework.Godot.UI"/>
         <Using Remove="@(GFrameworkExcludedUsing)"/>
     </ItemGroup>
-    <Import Project="..\GFramework\GFramework.Game.SourceGenerators\GeWuYou.GFramework.Game.SourceGenerators.targets"
-            Condition="'$(UseLocalGFrameworkWorkspace)' == 'true' and Exists('..\GFramework\GFramework.Game.SourceGenerators\GeWuYou.GFramework.Game.SourceGenerators.targets')"/>
-    <Import Project="..\GFramework\GFramework.Godot.SourceGenerators\GeWuYou.GFramework.Godot.SourceGenerators.targets"
-            Condition="'$(UseLocalGFrameworkWorkspace)' == 'true' and Exists('..\GFramework\GFramework.Godot.SourceGenerators\GeWuYou.GFramework.Godot.SourceGenerators.targets')"/>
+    <Import Project="..\GFramework\GFramework.Game.SourceGenerators\GeWuYou.GFramework.Game.SourceGenerators.targets" Condition="'$(UseLocalGFrameworkWorkspace)' == 'true' and Exists('..\GFramework\GFramework.Game.SourceGenerators\GeWuYou.GFramework.Game.SourceGenerators.targets')"/>
+    <Import Project="..\GFramework\GFramework.Godot.SourceGenerators\GeWuYou.GFramework.Godot.SourceGenerators.targets" Condition="'$(UseLocalGFrameworkWorkspace)' == 'true' and Exists('..\GFramework\GFramework.Godot.SourceGenerators\GeWuYou.GFramework.Godot.SourceGenerators.targets')"/>
     <ItemGroup>
         <Content Include=".github\dependabot.yml"/>
         <Content Include=".github\workflows\auto-tag.yml"/>
