@@ -37,7 +37,7 @@ jobs:
 
       - name: Semantic release preview
         id: semantic_release
-        uses: cycjimmy/semantic-release-action@v6
+        uses: cycjimmy/semantic-release-action@v8
         with:
           dry_run: true
           ci: false
@@ -110,7 +110,7 @@ jobs:
 
       - name: Semantic release
         id: semantic_release
-        uses: cycjimmy/semantic-release-action@v6
+        uses: cycjimmy/semantic-release-action@v8
         with:
           dry_run: false
           extra_plugins: |
